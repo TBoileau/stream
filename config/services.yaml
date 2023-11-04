@@ -7,6 +7,7 @@ parameters:
     assets.fonts.thunder: '%assets.fonts%/Thunder-BoldLC.ttf'
     assets.fonts.monument: '%assets.fonts%/MonumentExtended-Regular.otf'
     assets.images.thumbnail: '%assets.images%/thumbnail.png'
+    assets.images.schedule: '%assets.images%/schedule.png'
     intervention.driver: 'imagick'
 
 services:
@@ -16,7 +17,8 @@ services:
         bind:
             string $uploads: '%uploads%'
             string $logoDir: '%assets.logo%'
-            string $thumbnail: '%assets.images.thumbnail%'
+            string $thumbnailPath: '%assets.images.thumbnail%'
+            string $schedulePath: '%assets.images.schedule%'
             array $fonts:
                 thunder: '%assets.fonts.thunder%'
                 monument: '%assets.fonts.monument%'
