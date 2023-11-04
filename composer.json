@@ -6,6 +6,7 @@
     "require": {
         "php": ">=8.1",
         "ext-ctype": "*",
+        "ext-intl": "*",
         "ext-iconv": "*",
         "ext-imagick": "*",
         "intervention/image": "^2.7",

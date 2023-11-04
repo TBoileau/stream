@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Entity\Live;
 use App\Thumbnail\ThumbnailGeneratorInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -32,17 +33,19 @@ final class StreamThumbnailCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
+        $live = new Live();
+
         /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         $seasonQuestion = new Question('Veuillez insérer le numéro de la saison : ');
-        $season = (int) $helper->ask($input, $output, $seasonQuestion);
+        $live->season = (int) $helper->ask($input, $output, $seasonQuestion);
 
         $episodeQuestion = new Question('Veuillez insérer le numéro de l\'épisode : ');
-        $episode = (int) $helper->ask($input, $output, $episodeQuestion);
+        $live->episode = (int) $helper->ask($input, $output, $episodeQuestion);
 
         $titleQuestion = new Question('Veuillez insérer le titre de l\'épisode : ');
-        $title = (string) $helper->ask($input, $output, $titleQuestion);
+        $live->title = (string) $helper->ask($input, $output, $titleQuestion);
 
         $finder = new Finder();
         $finder->files()->in($this->logoDir);
@@ -55,9 +58,9 @@ final class StreamThumbnailCommand extends Command
         }
 
         $logoQuestion = new ChoiceQuestion('Veuillez choisir un logo : ', array_keys($logos));
-        $logo = (string) $helper->ask($input, $output, $logoQuestion);
+        $live->logo = $logos[(string) $helper->ask($input, $output, $logoQuestion)];
 
-        $filename = $this->thumbnailGenerator->generate($season, $episode, $title, $logos[$logo]);
+        $filename = $this->thumbnailGenerator->generate($live);
 
         $io->success(sprintf('Votre thumbnail a été créé : %s', $filename));
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Thumbnail;
 
+use App\Entity\Live;
 use Intervention\Image\AbstractFont;
 use Intervention\Image\ImageManager;
 use function Symfony\Component\String\u;
@@ -15,18 +16,19 @@ class ThumbnailGenerator implements ThumbnailGeneratorInterface
      */
     public function __construct(
         private readonly ImageManager $imageManager,
-        private readonly string       $thumbnail,
+        private readonly string       $thumbnailPath,
         private readonly array        $fonts,
-        private readonly string        $uploads,
-    ) {
+        private readonly string       $uploads,
+    )
+    {
     }
 
-    public function generate(int $season, int $episode, string $title, string $logo): string
+    public function generate(Live $live): string
     {
-        $episodeFull = sprintf('S%02dE%02d', $season, $episode);
+        $episodeFull = sprintf('S%02dE%02d', $live->season, $live->episode);
 
-        $thumbnail = $this->imageManager
-            ->make($this->thumbnail)
+        $image = $this->imageManager
+            ->make($this->thumbnailPath)
             ->text(
                 $episodeFull,
                 1120,
@@ -39,7 +41,7 @@ class ThumbnailGenerator implements ThumbnailGeneratorInterface
                     ->valign('center')
             )
             ->text(
-                u($title)
+                u($live->title)
                     ->upper()
                     ->wordwrap(20, "\n", false)->toString(),
                 918,
@@ -53,7 +55,7 @@ class ThumbnailGenerator implements ThumbnailGeneratorInterface
             );
 
         /** @var array<int, int> $imageInfo */
-        $imageInfo = getimagesize($logo);
+        $imageInfo = getimagesize($live->logo);
 
         /**
          * @var int $imageWidth
@@ -64,13 +66,13 @@ class ThumbnailGenerator implements ThumbnailGeneratorInterface
         $categoryW = 490;
         $categoryH = $imageHeight * $categoryW / $imageWidth;
 
-        $category = $this->imageManager->make($logo)->resize($categoryW, $categoryH);
+        $category = $this->imageManager->make($live->logo)->resize($categoryW, $categoryH);
 
-        $thumbnail->insert($category, 'center-left', 270, intval(round(555 - ($categoryH / 2))));
+        $image->insert($category, 'center-left', 270, intval(round(555 - ($categoryH / 2))));
 
         $filename = sprintf('%s/%s.png', $this->uploads, $episodeFull);
 
-        $thumbnail->save($filename);
+        $image->save($filename);
 
         return $filename;
     }
