@@ -9,7 +9,7 @@ use Intervention\Image\AbstractFont;
 use Intervention\Image\ImageManager;
 use function Symfony\Component\String\u;
 
-class ThumbnailGenerator implements ThumbnailGeneratorInterface
+final class ThumbnailGenerator implements ThumbnailGeneratorInterface
 {
     /**
      * @param array<array-key, string> $fonts

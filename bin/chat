@@ -1,0 +1,41 @@
+#!/usr/bin/env node
+const tmi = require('tmi.js');
+const { exec } = require("child_process");
+require('dotenv').config({path: '.env.local'});
+
+const client = new tmi.Client({
+    connection: {
+        debug: process.env.APP_ENV !== "PROD",
+        reconnect: true
+    },
+    identity: {
+        username: process.env.TWITCH_BOT_USERNAME,
+        password: `oauth:${process.env.TWITCH_OAUTH_TOKEN}`
+    },
+    channels: ['toham']
+});
+
+client.connect().catch(console.error);
+
+client.on('message', (channel, tags, message, self) => {
+    if (self) {
+        return;
+    }
+    exec(`php bin/console stream:chat "${tags['display-name']}" "${message}"`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`error: ${error.message}`);
+            return;
+        }
+
+        if (stderr) {
+            console.error(`stderr: ${stderr}`);
+            return;
+        }
+
+        try {
+            client.say(channel, stdout.trim().substring(5));
+        } catch (e) {
+            console.error(e);
+        }
+    });
+});
