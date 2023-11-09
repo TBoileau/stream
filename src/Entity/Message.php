@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Chat;
+namespace App\Entity;
 
 use DateTimeImmutable;
 use DateTimeInterface;

@@ -1,0 +1,116 @@
+@font-face {
+  font-family: Thunder;
+  src: url(../fonts/Thunder-BoldLC.ttf);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  width: 1920px;
+  height: 1080px;
+}
+
+.question-container:has(> .question) {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, .50);
+
+  &:has(> .question--current) {
+    background: rgba(0, 0, 0, 0);
+    transition: background-color 1s ease-in;
+  }
+
+  .question {
+    position: absolute;
+    left: calc(50% - 480px);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    font-family: Thunder, sans-serif;
+    width: 960px;
+    aspect-ratio: 2400/960;
+    background: url(../images/background.png);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 3rem;
+    border-radius: 20px;
+    overflow: hidden;
+    gap: 2rem;
+    animation-name: slide-down;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+
+    .username {
+      padding: .5rem 1rem;
+      background: #FF8D74;
+      color: #FFF;
+      font-size: 2rem;
+      margin: 0;
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+
+    .content {
+      padding: .5rem 1rem;
+      background: #FFF;
+      color: #00153F;
+      font-size: 2rem;
+      border-radius: 5px;
+      animation-duration: 2s;
+      margin: 0;
+    }
+
+    &.question--current {
+      @keyframes slide-down {
+        0% {
+          top: calc(-960px * 1080 / 2400);
+        }
+
+        80% {
+          top: calc(50% - (960px * 1080 / 2400) / 2 + 50px);
+        }
+
+        100% {
+          top: calc(50% - (960px * 1080 / 2400) / 2);
+        }
+      }
+
+      @keyframes slide-corner {
+        0% {
+          top: calc(50% - (960px * 1080 / 2400) / 2);
+        }
+
+        100% {
+          width: 480px;
+          top: 2rem;
+          left: calc(100% - 480px - 2rem);
+          padding: .75rem 1.5rem;
+          gap: 1rem;
+        }
+      }
+
+      animation-name: slide-corner;
+      animation-duration: 1s;
+      animation-timing-function: ease-in;
+      animation-fill-mode: forwards;
+
+      .username {
+        font-size: 1.5rem;
+      }
+
+      .content {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+

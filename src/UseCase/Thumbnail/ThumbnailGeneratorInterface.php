@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Thumbnail;
+namespace App\UseCase\Thumbnail;
 
 use App\Entity\Live;
 

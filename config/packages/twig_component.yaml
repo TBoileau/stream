@@ -1,0 +1,5 @@
+twig_component:
+    anonymous_template_directory: 'question/'
+    defaults:
+        # Namespace & directory for question
+        App\Twig\Components\: 'question/'

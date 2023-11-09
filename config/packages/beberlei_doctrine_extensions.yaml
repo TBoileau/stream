@@ -1,0 +1,5 @@
+doctrine:
+  orm:
+    dql:
+      datetime_functions:
+        date: DoctrineExtensions\Query\Sqlite\Date

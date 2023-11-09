@@ -18,9 +18,6 @@ const client = new tmi.Client({
 client.connect().catch(console.error);
 
 client.on('message', (channel, tags, message, self) => {
-    if (self) {
-        return;
-    }
     exec(`php bin/console stream:chat "${tags['display-name']}" "${message}"`, (error, stdout, stderr) => {
         if (error) {
             console.error(`error: ${error.message}`);

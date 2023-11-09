@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Schedule;
+namespace App\UseCase\Schedule;
 
 use App\Entity\Live;
 use App\Entity\Schedule;
