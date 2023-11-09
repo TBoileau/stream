@@ -21,7 +21,7 @@ final class Message
         public string $username,
         #[NotBlank]
         #[Regex(pattern: self::QUESTION_PATTERN)]
-        public string $message
+        public string $content
     ) {
         $this->askedAt = new DateTimeImmutable();
     }
@@ -34,7 +34,7 @@ final class Message
     public function toQuestion(): Question
     {
         /** @var array{question: string} $matches */
-        preg_match(self::QUESTION_PATTERN, $this->message, $matches);
+        preg_match(self::QUESTION_PATTERN, $this->content, $matches);
 
         return Question::create($this->username, $this->askedAt, $matches['question']);
     }

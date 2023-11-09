@@ -1,35 +1,39 @@
 parameters:
-    uploads: '%kernel.project_dir%/public/uploads'
-    assets: '%kernel.project_dir%/assets'
-    assets.logo: '%assets%/logo'
-    assets.images: '%assets%/images'
-    assets.fonts: '%assets%/fonts'
-    assets.fonts.thunder: '%assets.fonts%/Thunder-BoldLC.ttf'
-    assets.fonts.monument: '%assets.fonts%/MonumentExtended-Regular.otf'
-    assets.images.thumbnail: '%assets.images%/thumbnail.png'
-    assets.images.schedule: '%assets.images%/schedule.png'
-    intervention.driver: 'imagick'
+  uploads: '%kernel.project_dir%/public/uploads'
+  assets: '%kernel.project_dir%/assets'
+  assets.logo: '%assets%/logo'
+  assets.images: '%assets%/images'
+  assets.fonts: '%assets%/fonts'
+  assets.fonts.thunder: '%assets.fonts%/Thunder-BoldLC.ttf'
+  assets.fonts.monument: '%assets.fonts%/MonumentExtended-Regular.otf'
+  assets.images.thumbnail: '%assets.images%/thumbnail.png'
+  assets.images.schedule: '%assets.images%/schedule.png'
+  intervention.driver: 'imagick'
 
 services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-        bind:
-            string $uploads: '%uploads%'
-            string $logoDir: '%assets.logo%'
-            string $thumbnailPath: '%assets.images.thumbnail%'
-            string $schedulePath: '%assets.images.schedule%'
-            array $fonts:
-                thunder: '%assets.fonts.thunder%'
-                monument: '%assets.fonts.monument%'
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    bind:
+      string $uploads: '%uploads%'
+      string $logoDir: '%assets.logo%'
+      string $thumbnailPath: '%assets.images.thumbnail%'
+      string $schedulePath: '%assets.images.schedule%'
+      array $fonts:
+        thunder: '%assets.fonts.thunder%'
+        monument: '%assets.fonts.monument%'
 
-    App\:
-        resource: '../src/'
-        exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
-            - '../src/Kernel.php'
+  App\:
+    resource: '../src/'
+    exclude:
+      - '../src/DependencyInjection/'
+      - '../src/Entity/'
+      - '../src/Kernel.php'
 
-    Intervention\Image\ImageManager:
-        factory: [ App\ImageManager\ImageManagerFactory, 'create' ]
-        arguments: [ '%intervention.driver%' ]
+  Intervention\Image\ImageManager:
+    factory: [ App\ImageManager\ImageManagerFactory, 'create' ]
+    arguments: [ '%intervention.driver%' ]
+
+  GhostZero\Tmi\Client:
+    factory: [ App\Tmi\ClientFactory, 'create' ]
+    arguments: [ '%env(TWITCH_BOT_USERNAME)%', '%env(TWITCH_OAUTH_TOKEN)%' ]

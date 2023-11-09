@@ -4,13 +4,12 @@ namespace App\Command;
 
 use App\Entity\Message;
 use App\UseCase\Chat\QuestionProcessorInterface;
+use GhostZero\Tmi\Client;
+use GhostZero\Tmi\Events\Twitch\MessageEvent;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsCommand(
@@ -20,46 +19,43 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final class StreamChatCommand extends Command
 {
     public function __construct(
-        private readonly ValidatorInterface $validator,
+        private readonly Client                     $client,
+        private readonly ValidatorInterface         $validator,
         private readonly QuestionProcessorInterface $questionProcessor
-    ) {
+    )
+    {
         parent::__construct();
     }
 
-    protected function configure(): void
+    private function onMessage(MessageEvent $event): void
     {
-        $this
-            ->addArgument('username', InputArgument::REQUIRED, 'Username')
-            ->addArgument('message', InputArgument::REQUIRED, 'Message')
-        ;
+        if ($event->self) {
+            return;
+        }
+
+        $message = Message::create($event->user, $event->message);
+
+        if ($this->validator->validate($message)->count() > 0) {
+            return;
+        }
+
+        $this->questionProcessor->save($message->toQuestion());
+
+        $this->client->say(
+            $event->channel->getName(),
+            sprintf(
+                'Merci @%s pour ta question, j\'y répondrais lors de la FAQ, un peu de patience.',
+                $message->username
+            )
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
+        $this->client->on(MessageEvent::class, $this->onMessage(...));
 
-        try {
-            $message = Message::create(
-                (string) $input->getArgument('username'),
-                (string) $input->getArgument('message')
-            );
+        $this->client->connect();
 
-            if (($violationsList = $this->validator->validate($message))->count() > 0) {
-                throw new ValidationFailedException($message, $violationsList);
-            }
-
-            $this->questionProcessor->save($message->toQuestion());
-
-            $io->success(
-                sprintf(
-                    'Merci @%s pour ta question, j\'y répondrais lors de la FAQ, un peu de patience.',
-                    $message->username
-                )
-            );
-            return Command::SUCCESS;
-        } catch (ValidationFailedException $exception) {
-            $io->error($exception->getMessage());
-            return Command::FAILURE;
-        }
+        return Command::SUCCESS;
     }
 }

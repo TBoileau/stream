@@ -141,7 +141,7 @@
         "files": [
             "./assets/bootstrap.js",
             "./assets/controllers.json",
-            "./assets/controllers/hello_controller.js"
+            "./assets/controllers/chat_controller.js"
         ]
     },
     "symfony/twig-bundle": {

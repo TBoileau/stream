@@ -11,7 +11,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(name: 'question', template: 'question/component.html.twig')]
+#[AsLiveComponent(name: 'question', template: 'components/question.html.twig')]
 final class QuestionComponent
 {
     use DefaultActionTrait;

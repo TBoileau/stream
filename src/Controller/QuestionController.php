@@ -17,7 +17,7 @@ final class QuestionController extends AbstractController
     #[Route('/live', name: 'live', methods: Request::METHOD_GET)]
     public function live(): Response
     {
-        return $this->render('question/live.html.twig');
+        return $this->render('live.html.twig');
     }
 
     #[Route('/next', name: 'next', methods: Request::METHOD_GET)]

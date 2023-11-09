@@ -7,25 +7,73 @@
   box-sizing: border-box;
 }
 
-body {
+body:has( .chat) {
+  padding: 0;
+  margin: 0;
+  width: 500px;
+  height: 585px;
+  background: rgb(48,79,133);
+  background: linear-gradient(90deg, rgba(48,79,133,1) 0%, rgba(15,32,68,1) 100%);
+  border-radius: 16px;
+  position: relative;
+}
+
+.chat {
+  font-family: Thunder, sans-serif;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 400px;
+  height: 550px;
+  padding-right: 1rem;
+
+  .message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .username {
+      padding: 0.3rem 0.6rem;
+      background: #FF8D74;
+      color: #FFF;
+      font-size: 1.5rem;
+      margin: 0;
+      border-radius: 5px;
+      flex-shrink: 0;
+      z-index: 2;
+      transform: rotate(-1deg);
+      width: fit-content;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    }
+
+    .content {
+      z-index: 1;
+      padding: .5rem 1rem;
+      background: #FFF;
+      color: #00153F;
+      font-size: 1.5rem;
+      border-radius: 5px;
+      animation-duration: 2s;
+      margin: -.25rem 0 0 1rem;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    }
+  }
+}
+
+body:has( .question-container) {
   padding: 0;
   margin: 0;
   width: 1920px;
   height: 1080px;
 }
 
-.question-container:has(> .question) {
+.question-container {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, .50);
-
-  &:has(> .question--current) {
-    background: rgba(0, 0, 0, 0);
-    transition: background-color 1s ease-in;
-  }
 
   .question {
     position: absolute;
